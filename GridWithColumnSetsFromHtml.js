@@ -106,7 +106,7 @@ define([
 		return columnsets;
 	}
 	return declare([GridFromHtml, ColumnSet], {
-		configStructure: function () {
+		configStructure: function configStructure() {
 			// summary:
 			//		Configure subRows based on HTML originally in srcNodeRef
 
@@ -119,10 +119,10 @@ define([
 				}
 				else {
 					// no reason to worry about ColumnSets, let GridFromHtml do the job
-					return this.inherited(arguments);
+					return this.inherited(configStructure, arguments);
 				}
 			}
-			return this.inherited(arguments);
+			return this.inherited(configStructure, arguments);
 		}
 	});
 });

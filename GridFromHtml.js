@@ -38,17 +38,17 @@ define([
 	}
 
 	var GridFromHtml = declare(Grid, {
-		configStructure: function () {
+		configStructure: function configStructure() {
 			// summary:
 			//		Configure subRows based on HTML originally in srcNodeRef
 			if (!this._checkedTrs) {
 				this._checkedTrs = true;
 				this.subRows = getSubRowsFromDom(this.srcNodeRef, this.subRows);
 			}
-			return this.inherited(arguments);
+			return this.inherited(configStructure, arguments);
 		},
 
-		create: function (params, srcNodeRef) {
+		create: function create(params, srcNodeRef) {
 			// We need to replace srcNodeRef, presumably a table, with a div.
 			// (Otherwise we'll generate highly invalid markup, which IE doesn't like)
 			var div = document.createElement('div'),
@@ -68,7 +68,7 @@ define([
 			(params = params || {}).srcNodeRef = srcNodeRef;
 			// call inherited with the new node
 			// (but configStructure will look at srcNodeRef)
-			this.inherited(arguments, [params, div]);
+			this.inherited(create, arguments, [params, div]);
 
 			// destroy srcNodeRef for good now that we're done with it
 			domConstruct.destroy(srcNodeRef);

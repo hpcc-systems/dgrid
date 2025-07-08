@@ -23,10 +23,10 @@ define([
 			this._editorsPendingStartup = [];
 		},
 
-		postCreate: function () {
+		postCreate: function postCreate() {
 			var self = this;
 
-			this.inherited(arguments);
+			this.inherited(postCreate, arguments);
 
 			this.on('.dgrid-input:focusin', function () {
 				self._focusedEditorCell = self.cell(this);
@@ -42,9 +42,9 @@ define([
 			this._listeners.push(this._editorFocusoutHandle);
 		},
 
-		insertRow: function () {
+		insertRow: function insertRow() {
 			this._editorRowListeners = {};
-			var rowElement = this.inherited(arguments);
+			var rowElement = this.inherited(insertRow, arguments);
 			var row = this.row(rowElement);
 			var rowListeners = this._editorCellListeners[rowElement.id] =
 				this._editorCellListeners[rowElement.id] || {};
@@ -65,7 +65,7 @@ define([
 			return rowElement;
 		},
 
-		refresh: function () {
+		refresh: function refresh() {
 			for (var id in this._editorInstances) {
 				var editorInstanceDomNode = this._getEditorRootNode(this._editorInstances[id].domNode);
 				if (editorInstanceDomNode && editorInstanceDomNode.parentNode) {
@@ -75,7 +75,7 @@ define([
 				}
 			}
 
-			return this.inherited(arguments);
+			return this.inherited(refresh, arguments);
 		},
 
 		removeRow: function (rowElement) {
@@ -117,11 +117,11 @@ define([
 				}
 			}
 
-			return this.inherited(arguments);
+			return this.inherited(removeRow, arguments);
 		},
 
-		renderArray: function () {
-			var rows = this.inherited(arguments);
+		renderArray: function renderArray() {
+			var rows = this.inherited(renderArray, arguments);
 			if (rows.length) {
 				// Finish processing any pending editors that are now displayed
 				this._startupPendingEditors();
@@ -132,14 +132,14 @@ define([
 			return rows;
 		},
 
-		_onNotification: function () {
-			this.inherited(arguments);
+		_onNotification: function _onNotification() {
+			this.inherited(_onNotification, arguments);
 			this._startupPendingEditors();
 		},
 
-		_destroyColumns: function () {
+		_destroyColumns: function _destroyColumns() {
 			this._editorStructureCleanup();
-			this.inherited(arguments);
+			this.inherited(_destroyColumns, arguments);
 		},
 
 		_editorStructureCleanup: function () {
@@ -178,13 +178,13 @@ define([
 			this._editorsPendingStartup = [];
 		},
 
-		configStructure: function () {
+		configStructure: function configStructure() {
 			this._alwaysOnWidgetColumns = [];
-			this.inherited(arguments);
+			this.inherited(configStructure, arguments);
 		},
 
-		_configColumns: function () {
-			var columnArray = this.inherited(arguments);
+		_configColumns: function _configColumns() {
+			var columnArray = this.inherited(_configColumns, arguments);
 			for (var i = 0, l = columnArray.length; i < l; i++) {
 				if (columnArray[i].editor) {
 					this._configureEditorColumn(columnArray[i]);
@@ -351,7 +351,7 @@ define([
 			return null;
 		},
 
-		refreshCell: function (cell) {
+		refreshCell: function refreshCell(cell) {
 			var column = cell.column;
 			var value = column.get ? column.get(cell.row.data) : cell.row.data[column.field];
 
@@ -382,7 +382,7 @@ define([
 				column._editorBlurHandle.remove();
 			}
 
-			return this.inherited(arguments);
+			return this.inherited(refreshCell, arguments);
 		},
 
 		_showEditor: function (cmp, column, cellElement, value) {
@@ -582,7 +582,7 @@ define([
 					this._listeners.push(
 						on(wrapperNode, 'blur', function () {
 							if (!cmp._dgridIgnoreChange) {
-								self._updatePropertyFromEditor(column, cmp, {type: 'widget'});
+								self._updatePropertyFromEditor(column, cmp, { type: 'widget' });
 							}
 						})
 					);
@@ -592,7 +592,7 @@ define([
 					// the 'change' event is delayed by setTimeouts in Dijit and will fire too late.
 					cmp.on('change', function () {
 						if (!cmp._dgridIgnoreChange) {
-							self._updatePropertyFromEditor(column, cmp, {type: 'widget'});
+							self._updatePropertyFromEditor(column, cmp, { type: 'widget' });
 						}
 					});
 				}
@@ -730,7 +730,7 @@ define([
 					}
 				}
 
-				self._updatePropertyFromEditor(column, cmp, {type: 'widget'});
+				self._updatePropertyFromEditor(column, cmp, { type: 'widget' });
 
 				var parentNode = rootNode.parentNode,
 					options = { alreadyHooked: true },

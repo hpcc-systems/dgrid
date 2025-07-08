@@ -18,18 +18,18 @@ define([
 		layoutPriority: 0, // BorderContainer
 		showTitle: true, // StackContainer
 
-		buildRendering: function () {
+		buildRendering: function buildRendering() {
 			registry.add(this);
-			this.inherited(arguments);
+			this.inherited(buildRendering, arguments);
 			// Note: for dojo 2.0 may rename widgetId to dojo._scopeName + "_widgetId"
 			this.domNode.setAttribute('widgetId', this.id);
 		},
 
-		startup: function () {
+		startup: function startup() {
 			if (this._started) {
 				return;
 			}
-			this.inherited(arguments);
+			this.inherited(startup, arguments);
 
 			var widget = this.getParent();
 			// If we have a parent layout container widget, it will handle resize,
@@ -43,8 +43,8 @@ define([
 			this.destroy();
 		},
 
-		destroy: function () {
-			this.inherited(arguments);
+		destroy: function destroy() {
+			this.inherited(destroy, arguments);
 			registry.remove(this.id);
 		},
 
@@ -73,13 +73,13 @@ define([
 			return wbPrototype.placeAt.call(this, reference, position);
 		},
 
-		resize: function (changeSize) {
+		resize: function resize(changeSize) {
 			// Honor changeSize parameter used by layout widgets, and resize grid
 			if (changeSize) {
 				domGeometry.setMarginBox(this.domNode, changeSize);
 			}
 
-			this.inherited(arguments);
+			this.inherited(resize, arguments);
 		},
 
 		_set: function (prop, value) {

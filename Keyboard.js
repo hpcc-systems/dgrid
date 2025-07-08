@@ -10,10 +10,10 @@ define([
 ], function (declare, aspect, domClass, on, lang, has, miscUtil) {
 
 	var delegatingInputTypes = {
-			checkbox: 1,
-			radio: 1,
-			button: 1
-		},
+		checkbox: 1,
+		radio: 1,
+		button: 1
+	},
 		hasGridCellClass = /\bdgrid-cell\b/,
 		hasGridRowClass = /\bdgrid-row\b/;
 
@@ -41,8 +41,8 @@ define([
 		//		Event type to use for Keyboard's mouse down listener that sets focus.
 		mouseDownEventType: 'mousedown',
 
-		postMixInProperties: function () {
-			this.inherited(arguments);
+		postMixInProperties: function postMixInProperties() {
+			this.inherited(postMixInProperties, arguments);
 
 			if (!this.keyMap) {
 				this.keyMap = lang.mixin({}, Keyboard.defaultKeyMap);
@@ -52,8 +52,8 @@ define([
 			}
 		},
 
-		postCreate: function () {
-			this.inherited(arguments);
+		postCreate: function postCreate() {
+			this.inherited(postCreate, arguments);
 			var grid = this;
 
 			function handledEvent(event) {
@@ -179,18 +179,18 @@ define([
 			this._debouncedEnsureScroll = miscUtil.debounce(this._ensureScroll, this);
 		},
 
-		_pruneRow: function () {
+		_pruneRow: function _pruneRow() {
 			// If rows are being pruned for scrolling, then don't try to restore focus.
 			var savedFocusedNode = this._focusedNode;
 			this._focusedNode = null;
-			this.inherited(arguments);
+			this.inherited(_pruneRow, arguments);
 			this._focusedNode = savedFocusedNode;
 		},
 
-		removeRow: function (rowElement) {
+		removeRow: function removeRow(rowElement) {
 			if (!this._focusedNode) {
 				// Nothing special to do if we have no record of anything focused
-				return this.inherited(arguments);
+				return this.inherited(removeRow, arguments);
 			}
 
 			var self = this,
@@ -233,11 +233,11 @@ define([
 				this._focusedNode = null;
 			}
 
-			this.inherited(arguments);
+			this.inherited(removeRow, arguments);
 		},
 
-		insertRow: function () {
-			var rowElement = this.inherited(arguments);
+		insertRow: function insertRow() {
+			var rowElement = this.inherited(insertRow, arguments);
 			if (this._removedFocus && !this._removedFocus.wait) {
 				this._restoreFocus(rowElement);
 			}

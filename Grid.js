@@ -103,9 +103,9 @@ define([
 			// summary:
 			//		Generates the grid for each row (used by renderHeader and and renderRow)
 			var row = domConstruct.create('table', {
-					className: 'dgrid-row-table',
-					role: 'presentation'
-				}),
+				className: 'dgrid-row-table',
+				role: 'presentation'
+			}),
 				// IE < 9 needs an explicit tbody; other browsers do not
 				tbody = (has('ie') < 9) ? domConstruct.create('tbody', null, row) : row,
 				tr,
@@ -284,7 +284,7 @@ define([
 			this._sortListener = listen(row, 'click,keydown', function (event) {
 				// respond to click, space keypress, or enter keypress
 				if (event.type === 'click' || event.keyCode === 32 ||
-						(!has('opera') && event.keyCode === 13)) {
+					(!has('opera') && event.keyCode === 13)) {
 					var target = event.target;
 					var field;
 					var sort;
@@ -333,14 +333,14 @@ define([
 			});
 		},
 
-		resize: function () {
+		resize: function resize() {
 			// extension of List.resize to allow accounting for
 			// column sizes larger than actual grid area
 			var headerTableNode = this.headerNode.firstChild,
 				contentNode = this.contentNode,
 				width;
 
-			this.inherited(arguments);
+			this.inherited(resize, arguments);
 
 			// Force contentNode width to match up with header width.
 			contentNode.style.width = ''; // reset first
@@ -353,22 +353,22 @@ define([
 			}
 		},
 
-		destroy: function () {
+		destroy: function destroy() {
 			// Run _destroyColumns first to perform any column plugin tear-down logic.
 			this._destroyColumns();
 			if (this._sortListener) {
 				this._sortListener.remove();
 			}
 
-			this.inherited(arguments);
+			this.inherited(destroy, arguments);
 		},
 
-		_setSort: function () {
+		_setSort: function _setSort() {
 			// summary:
 			//		Extension of List.js sort to update sort arrow in UI
 
 			// Normalize sort first via inherited logic, then update the sort arrow
-			this.inherited(arguments);
+			this.inherited(_setSort, arguments);
 			this.updateSortArrow(this.sort);
 		},
 

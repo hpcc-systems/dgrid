@@ -54,13 +54,13 @@ define([
 			return source === this; // self-accept only
 		},
 
-		_legalMouseDown: function (evt) {
+		_legalMouseDown: function _legalMouseDown(evt) {
 			// Overridden to prevent blocking ColumnResizer resize handles.
 			return evt.target.className.indexOf('dgrid-resize-handle') > -1 ? false :
-				this.inherited(arguments);
+				this.inherited(_legalMouseDown, arguments);
 		},
 
-		onDropInternal: function (nodes) {
+		onDropInternal: function onDropInternal(nodes) {
 			var grid = this.grid,
 				match = dndTypeRx.exec(stripIdPrefix(grid.id, nodes[0].getAttribute('dndType'))),
 				structureProperty = match[2] ? 'columnSets' : 'subRows',
@@ -68,7 +68,7 @@ define([
 				columns = grid.columns;
 
 			// First, allow original DnD logic to place node in new location.
-			this.inherited(arguments);
+			this.inherited(onDropInternal, arguments);
 
 			if (!match) {
 				return;
@@ -79,8 +79,8 @@ define([
 			// (Wait until the next turn to avoid errors in Opera.)
 			setTimeout(function () {
 				var newSubRow = arrayUtil.map(nodes[0].parentNode.childNodes, function (col) {
-						return columns[col.columnId];
-					}),
+					return columns[col.columnId];
+				}),
 					eventObject;
 
 				setMatchingSubRow(grid, match, newSubRow);
@@ -161,11 +161,11 @@ define([
 			// (If dndParent wasn't set, no columns are draggable)
 		},
 
-		renderHeader: function () {
+		renderHeader: function renderHeader() {
 			var dndTypePrefix = makeDndTypePrefix(this.id),
 				csLength, cs;
 
-			this.inherited(arguments);
+			this.inherited(renderHeader, arguments);
 
 			// After header is rendered, set up a dnd source on each of its subrows.
 
@@ -193,7 +193,7 @@ define([
 			}
 		},
 
-		_destroyColumns: function () {
+		_destroyColumns: function _destroyColumns() {
 			if (this._columnDndSources) {
 				// Destroy old dnd sources.
 				arrayUtil.forEach(this._columnDndSources, function (source) {
@@ -201,7 +201,7 @@ define([
 				});
 			}
 
-			this.inherited(arguments);
+			this.inherited(_destroyColumns, arguments);
 		}
 	});
 

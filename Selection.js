@@ -151,12 +151,12 @@ define([
 		//		overridden in CellSelection
 		_selectionTargetType: 'rows',
 
-		create: function () {
+		create: function create() {
 			this.selection = {};
-			return this.inherited(arguments);
+			return this.inherited(create, arguments);
 		},
-		postCreate: function () {
-			this.inherited(arguments);
+		postCreate: function postCreate() {
+			this.inherited(postCreate, arguments);
 
 			this._initSelectionEvents();
 
@@ -166,8 +166,8 @@ define([
 			this._setSelectionMode(selectionMode);
 		},
 
-		destroy: function () {
-			this.inherited(arguments);
+		destroy: function destroy() {
+			this.inherited(destroy, arguments);
 
 			// Remove any extra handles added by Selection.
 			if (this._selectstartHandle) {
@@ -220,8 +220,8 @@ define([
 			// Don't run if selection mode doesn't have a handler (incl. "none"), target can't be selected,
 			// or if coming from a dgrid-cellfocusin from a mousedown
 			if (!this[this._selectionHandlerName] || !this.allowSelect(this.row(target)) ||
-					(event.type === 'dgrid-cellfocusin' && event.parentType === 'mousedown') ||
-					(event.type === upType && target !== this._waitForMouseUp)) {
+				(event.type === 'dgrid-cellfocusin' && event.parentType === 'mousedown') ||
+				(event.type === upType && target !== this._waitForMouseUp)) {
 				return;
 			}
 			this._waitForMouseUp = null;
@@ -297,7 +297,7 @@ define([
 			// Clear selection first for right-clicks outside selection and non-ctrl-clicks;
 			// otherwise, extended mode logic is identical to multiple mode
 			if (event.button === 2 ? !this.isSelected(target) :
-					!(event.keyCode ? event.ctrlKey : event[ctrlEquiv])) {
+				!(event.keyCode ? event.ctrlKey : event[ctrlEquiv])) {
 				this.clearSelection(null, true);
 			}
 			this._multipleSelectionHandler(event, target);
@@ -362,7 +362,7 @@ define([
 			if (this.allowSelectAll) {
 				this.on('keydown', function (event) {
 					if (event[ctrlEquiv] && event.keyCode === 65 &&
-							!/\bdgrid-input\b/.test(event.target.className)) {
+						!/\bdgrid-input\b/.test(event.target.className)) {
 						event.preventDefault();
 						grid[grid.allSelected ? 'clearSelection' : 'selectAll']();
 					}
@@ -682,16 +682,16 @@ define([
 				this.allSelected && (!object.data || this.allowSelect(object));
 		},
 
-		refresh: function () {
+		refresh: function refresh() {
 			if (this.deselectOnRefresh) {
 				this.clearSelection();
 			}
 			this._lastSelected = null;
-			return this.inherited(arguments);
+			return this.inherited(refresh, arguments);
 		},
 
-		renderArray: function () {
-			var rows = this.inherited(arguments),
+		renderArray: function renderArray() {
+			var rows = this.inherited(renderArray, arguments),
 				selection = this.selection,
 				i,
 				row,

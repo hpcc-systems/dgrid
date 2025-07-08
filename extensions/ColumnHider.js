@@ -7,23 +7,23 @@ define([
 	'../util/misc',
 	'dojo/i18n!./nls/columnHider'
 ], function (arrayUtil, declare, domConstruct, has, listen, miscUtil, i18n) {
-/*
- *	Column Hider plugin for dgrid
- *	Originally contributed by TRT 2011-09-28
- *
- *	A dGrid plugin that attaches a menu to a dgrid, along with a way of opening it,
- *	that will allow you to show and hide columns.  A few caveats:
- *
- *	1. Menu placement is entirely based on CSS definitions.
- *	2. If you want columns initially hidden, you must add "hidden: true" to your
- *		column definition.
- *	3. This implementation DOES support ColumnSet, but has not been tested
- *		with multi-subrow records.
- *	4. Column show/hide is controlled via straight up HTML checkboxes.  If you
- *		are looking for something more fancy, you'll probably need to use this
- *		definition as a template to write your own plugin.
- *
- */
+	/*
+	 *	Column Hider plugin for dgrid
+	 *	Originally contributed by TRT 2011-09-28
+	 *
+	 *	A dGrid plugin that attaches a menu to a dgrid, along with a way of opening it,
+	 *	that will allow you to show and hide columns.  A few caveats:
+	 *
+	 *	1. Menu placement is entirely based on CSS definitions.
+	 *	2. If you want columns initially hidden, you must add "hidden: true" to your
+	 *		column definition.
+	 *	3. This implementation DOES support ColumnSet, but has not been tested
+	 *		with multi-subrow records.
+	 *	4. Column show/hide is controlled via straight up HTML checkboxes.  If you
+	 *		are looking for something more fancy, you'll probably need to use this
+	 *		definition as a template to write your own plugin.
+	 *
+	 */
 
 	var activeGrid, // references grid for which the menu is currently open
 		bodyListener; // references pausable event handler for body mousedown
@@ -143,7 +143,7 @@ define([
 			}
 		},
 
-		renderHeader: function () {
+		renderHeader: function renderHeader() {
 			var grid = this,
 				hiderMenuNode = this.hiderMenuNode,
 				hiderToggleNode = this.hiderToggleNode,
@@ -156,7 +156,7 @@ define([
 				event.stopPropagation();
 			}
 
-			this.inherited(arguments);
+			this.inherited(renderHeader, arguments);
 
 			if (!hiderMenuNode) {
 				// First run
@@ -213,7 +213,7 @@ define([
 
 				// Hook up delegated listener for modifications to checkboxes.
 				this._listeners.push(listen(hiderMenuNode,
-						'.dgrid-hider-menu-check:' + (has('ie') < 9 ? 'click' : 'change'),
+					'.dgrid-hider-menu-check:' + (has('ie') < 9 ? 'click' : 'change'),
 					function (e) {
 						grid._updateColumnHiddenState(
 							getColumnIdFromCheckbox(e.target, grid), !e.target.checked);
@@ -253,8 +253,8 @@ define([
 			this._renderHiderMenuEntries();
 		},
 
-		destroy: function () {
-			this.inherited(arguments);
+		destroy: function destroy() {
+			this.inherited(destroy, arguments);
 			// Remove any remaining rules applied to hidden columns.
 			for (var id in this._columnHiderRules) {
 				this._columnHiderRules[id].remove();
@@ -265,16 +265,16 @@ define([
 			return this.right(cell, -steps);
 		},
 
-		right: function (cell, steps) {
+		right: function right(cell, steps) {
 			if (!cell.element) {
 				cell = this.cell(cell);
 			}
-			var nextCell = this.inherited(arguments),
+			var nextCell = this.inherited(right, arguments),
 				prevCell = cell;
 
 			// Skip over hidden cells
 			while (nextCell.column.hidden) {
-				nextCell = this.inherited(arguments, [nextCell, steps > 0 ? 1 : -1]);
+				nextCell = this.inherited(right, arguments, [nextCell, steps > 0 ? 1 : -1]);
 				if (prevCell.element === nextCell.element) {
 					// No further visible cell found - return original
 					return cell;

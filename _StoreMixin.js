@@ -93,8 +93,8 @@ define([
 			}));
 		},
 
-		destroy: function () {
-			this.inherited(arguments);
+		destroy: function destroy() {
+			this.inherited(destroy, arguments);
 
 			if (this._structureHandle) {
 				this._structureHandle.remove();
@@ -107,14 +107,14 @@ define([
 			}
 		},
 
-		_configColumn: function (column) {
+		_configColumn: function _configColumn(column) {
 			// summary:
 			//		Implements extension point provided by Grid to store references to
 			//		any columns with `set` methods, for use during `save`.
 			if (column.set) {
 				this._columnsWithSet[column.field] = column;
 			}
-			this.inherited(arguments);
+			this.inherited(_configColumn, arguments);
 		},
 
 		_setCollection: function (collection) {
@@ -257,17 +257,17 @@ define([
 			return false;  // Indicate there was no noDataNode.
 		},
 
-		row: function () {
+		row: function row() {
 			// Extend List#row with more appropriate lookup-by-id logic
-			var row = this.inherited(arguments);
+			var row = this.inherited(row, arguments);
 			if (row && row.data && typeof row.id !== 'undefined') {
 				row.id = this.collection.getIdentity(row.data);
 			}
 			return row;
 		},
 
-		refresh: function () {
-			var result = this.inherited(arguments);
+		refresh: function refresh() {
+			var result = this.inherited(refresh, arguments);
 
 			if (!this.collection) {
 				this._insertNoDataNode();
@@ -276,12 +276,12 @@ define([
 			return result;
 		},
 
-		refreshCell: function (cell) {
+		refreshCell: function refreshCell(cell) {
 			if (!this.collection || !this._createBodyRowCell) {
 				throw new Error('refreshCell requires a Grid with a collection.');
 			}
 
-			this.inherited(arguments);
+			this.inherited(refreshCell, arguments);
 			return this.collection.get(cell.row.id).then(lang.hitch(this, '_refreshCellFromItem', cell));
 		},
 
@@ -298,8 +298,8 @@ define([
 			this._createBodyRowCell(cellElement, cell.column, item, options);
 		},
 
-		renderArray: function () {
-			var rows = this.inherited(arguments);
+		renderArray: function renderArray() {
+			var rows = this.inherited(renderArray, arguments);
 
 			if (!this.collection) {
 				if (rows.length && this.noDataNode) {
@@ -309,7 +309,7 @@ define([
 			return rows;
 		},
 
-		insertRow: function (object, parent, beforeNode, i, options) {
+		insertRow: function insertRow(object, parent, beforeNode, i, options) {
 			var store = this.collection,
 				dirty = this.dirty,
 				id = store && store.getIdentity(object),
@@ -325,7 +325,7 @@ define([
 				object = lang.delegate(object, dirtyObj);
 			}
 
-			row = this.inherited(arguments);
+			row = this.inherited(insertRow, arguments);
 
 			if (options && options.rows) {
 				options.rows[i] = row;
@@ -478,7 +478,7 @@ define([
 		},
 
 		removeRow: function (rowElement, preserveDom, options) {
-			var row = {element: rowElement};
+			var row = { element: rowElement };
 			// Check to see if we are now empty...
 			if (!preserveDom && (this.up(row).element === rowElement) && (this.down(row).element === rowElement)) {
 				// ...we are empty, so show the no data message.
@@ -490,7 +490,7 @@ define([
 				delete rows[rowElement.rowIndex];
 			}
 
-			return this.inherited(arguments);
+			return this.inherited(removeRow, arguments);
 		},
 
 		renderQueryResults: function (results, beforeNode, options) {
@@ -550,7 +550,7 @@ define([
 						rows.splice(from, 1);
 
 						if (event.type === 'delete' ||
-								(event.type === 'update' && (from < to || to === undefined))) {
+							(event.type === 'update' && (from < to || to === undefined))) {
 							// adjust the rowIndex so adjustRowIndices has the right starting point
 							rows[from] && rows[from].rowIndex--;
 						}
