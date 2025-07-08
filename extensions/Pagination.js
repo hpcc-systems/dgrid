@@ -84,8 +84,8 @@ define([
 		_currentPage: 1,
 		_loadingCount: 0,
 
-		buildRendering: function () {
-			this.inherited(arguments);
+		buildRendering: function buildRendering() {
+			this.inherited(buildRendering, arguments);
 
 			// add pagination to footer
 			var grid = this,
@@ -194,8 +194,8 @@ define([
 			}));
 		},
 
-		destroy: function () {
-			this.inherited(arguments);
+		destroy: function destroy() {
+			this.inherited(destroy, arguments);
 			if (this._pagingTextBoxChangeHandle) {
 				this._pagingTextBoxChangeHandle.remove();
 			}
@@ -455,7 +455,7 @@ define([
 			});
 		},
 
-		refresh: function (options) {
+		refresh: function refresh(options) {
 			// summary:
 			//		Re-renders the first page of data, or the current page if
 			//		options.keepCurrentPage is true.
@@ -464,7 +464,7 @@ define([
 			var page = options && options.keepCurrentPage ?
 				Math.min(this._currentPage, Math.ceil(this._total / this.rowsPerPage)) : 1;
 
-			this.inherited(arguments);
+			this.inherited(refresh, arguments);
 
 			// Reset to first page and return promise from gotoPage
 			return this.gotoPage(page).then(function (results) {
@@ -492,9 +492,9 @@ define([
 			}
 		},
 
-		renderQueryResults: function (results, beforeNode) {
+		renderQueryResults: function renderQueryResults(results, beforeNode) {
 			var grid = this,
-				rows = this.inherited(arguments);
+				rows = this.inherited(renderQueryResults, arguments);
 
 			if (!beforeNode) {
 				if (this._topLevelRequest) {
@@ -519,9 +519,9 @@ define([
 			return rows;
 		},
 
-		insertRow: function () {
+		insertRow: function insertRow() {
 			var oldNodes = this._oldPageNodes,
-				row = this.inherited(arguments);
+				row = this.inherited(insertRow, arguments);
 
 			if (oldNodes && row === oldNodes[row.id]) {
 				// If the previous row was reused, avoid removing it in cleanup

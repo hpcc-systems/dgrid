@@ -14,7 +14,7 @@ define([
 	'./Grid',
 	'dojo/has!touch?./util/touch'
 ], function (declare, lang, arrayUtil, aspect, Deferred, domConstruct, domClass, on, all, querySelector, when, has,
-			 Grid, touchUtil) {
+	Grid, touchUtil) {
 
 	return declare(null, {
 		// collapseOnRefresh: Boolean
@@ -214,8 +214,8 @@ define([
 			return when(promise);
 		},
 
-		_configColumns: function () {
-			var columnArray = this.inherited(arguments);
+		_configColumns: function _configColumns() {
+			var columnArray = this.inherited(_configColumns, arguments);
 
 			// Set up hash to store IDs of expanded rows (here rather than in
 			// _configureTreeColumn so nothing breaks if no column has renderExpando)
@@ -230,13 +230,13 @@ define([
 			return columnArray;
 		},
 
-		insertRow: function (object, container, beforeNode, i, options) {
+		insertRow: function insertRow(object, container, beforeNode, i, options) {
 			options = options || {};
 
 			var level = options.queryLevel = 'queryLevel' in options ? options.queryLevel :
 				'level' in container ? container.level : 0;
 
-			var rowElement = this.inherited(arguments);
+			var rowElement = this.inherited(insertRow, arguments);
 
 			// Auto-expand (shouldExpand) considerations
 			var row = this.row(rowElement),
@@ -277,8 +277,8 @@ define([
 			}
 		},
 
-		_queueNodeForDeletion: function (node) {
-			this.inherited(arguments);
+		_queueNodeForDeletion: function _queueNodeForDeletion(node) {
+			this.inherited(_queueNodeForDeletion, arguments);
 
 			var connected = node.connected;
 			if (connected) {
@@ -286,7 +286,7 @@ define([
 			}
 		},
 
-		_pruneRow: function (rowElement, removeBelow) {
+		_pruneRow: function _pruneRow(rowElement, removeBelow) {
 			var connected = rowElement.connected;
 			var preloadNode;
 			var preload;
@@ -305,13 +305,13 @@ define([
 				}
 			}
 
-			this.inherited(arguments, [rowElement, removeBelow, {
+			this.inherited(_pruneRow, arguments, [rowElement, removeBelow, {
 				treePrune: true,
 				removeBelow: removeBelow
 			}]);
 		},
 
-		refresh: function (options) {
+		refresh: function refresh(options) {
 			// Restoring the previous scroll position with OnDemandList is not possible in some cases with
 			// nested expanded nodes.  In those cases, restoring the position would require scrolling and
 			// loading rows incrementally to make sure the expanded rows are loaded and expanded.  dgrid is not
@@ -321,9 +321,9 @@ define([
 			this._expandPromises = [];
 			var keepScrollPosition = this.keepScrollPosition || (options && options.keepScrollPosition);
 			if (keepScrollPosition && Object.keys(this._expanded).length) {
-				refreshResult = this.inherited(arguments, lang.mixin(options || {}, { keepScrollPosition: false }));
+				refreshResult = this.inherited(refresh, arguments, lang.mixin(options || {}, { keepScrollPosition: false }));
 			} else {
-				refreshResult = this.inherited(arguments);
+				refreshResult = this.inherited(refresh, arguments);
 			}
 			return when(refreshResult).then(function () {
 				var promises = this._expandPromises;
@@ -332,7 +332,7 @@ define([
 			}.bind(this));
 		},
 
-		removeRow: function (rowElement, preserveDom, options) {
+		removeRow: function removeRow(rowElement, preserveDom, options) {
 			var connected = rowElement.connected,
 				childOptions = {},
 				childRows,
@@ -383,21 +383,21 @@ define([
 				}
 			}
 
-			this.inherited(arguments);
+			this.inherited(removeRow, arguments);
 		},
 
-		_refreshCellFromItem: function (cell, item) {
+		_refreshCellFromItem: function _refreshCellFromItem(cell, item) {
 			if (!cell.column.renderExpando) {
-				return this.inherited(arguments);
+				return this.inherited(_refreshCellFromItem, arguments);
 			}
 
-			this.inherited(arguments, [cell, item, {
+			this.inherited(_refreshCellFromItem, arguments, [cell, item, {
 				queryLevel: querySelector('.dgrid-expando-icon', cell.element)[0].level
 			}]);
 		},
 
-		cleanup: function () {
-			this.inherited(arguments);
+		cleanup: function cleanup() {
+			this.inherited(cleanup, arguments);
 
 			if (this.collapseOnRefresh) {
 				// Clear out the _expanded hash on each call to cleanup
@@ -406,8 +406,8 @@ define([
 			}
 		},
 
-		_destroyColumns: function () {
-			this.inherited(arguments);
+		_destroyColumns: function _destroyColumns() {
+			this.inherited(_destroyColumns, arguments);
 			var listeners = this._treeColumnListeners;
 
 			for (var i = listeners.length; i--;) {
@@ -417,12 +417,12 @@ define([
 			this._treeColumn = null;
 		},
 
-		_calcRowHeight: function (rowElement) {
+		_calcRowHeight: function _calcRowHeight(rowElement) {
 			// Override this method to provide row height measurements that
 			// include the children of a row
 			var connected = rowElement.connected;
 			// if connected, need to consider this in the total row height
-			return this.inherited(arguments) + (connected ? connected.offsetHeight : 0);
+			return this.inherited(_calcRowHeight, arguments) + (connected ? connected.offsetHeight : 0);
 		},
 
 		_configureTreeColumn: function (column) {
@@ -474,8 +474,8 @@ define([
 						var row = grid.row(event);
 						if ((!grid.collection.mayHaveChildren || grid.collection.mayHaveChildren(row.data)) &&
 							(event.type !== 'keydown' || event.keyCode === 32) && !(event.type === 'dblclick' &&
-							clicked && clicked.count > 1 && row.id === clicked.id &&
-							event.target.className.indexOf('dgrid-expando-icon') > -1)) {
+								clicked && clicked.count > 1 && row.id === clicked.id &&
+								event.target.className.indexOf('dgrid-expando-icon') > -1)) {
 							grid.expand(row);
 						}
 
@@ -531,11 +531,11 @@ define([
 			});
 		},
 
-		_onNotification: function (rows, event) {
+		_onNotification: function _onNotification(rows, event) {
 			if (event.type === 'delete') {
 				this._resetExpanded(event.id);
 			}
-			this.inherited(arguments);
+			this.inherited(_onNotification, arguments);
 		},
 
 		_onTreeTransitionEnd: function (event) {
@@ -613,8 +613,8 @@ define([
 			}
 		},
 
-		_calculatePreloadHeight: function (preload) {
-			var newHeight = this.inherited(arguments);
+		_calculatePreloadHeight: function _calculatePreloadHeight(preload) {
+			var newHeight = this.inherited(_calculatePreloadHeight, arguments);
 			var expandedContent = preload.expandedContent;
 			if (expandedContent) {
 				Object.keys(expandedContent).forEach(function (key) {
@@ -624,11 +624,11 @@ define([
 			return newHeight;
 		},
 
-		_getRenderedCollection: function (preload) {
+		_getRenderedCollection: function _getRenderedCollection(preload) {
 			if (preload.level) {
 				return preload.query.collection;
 			} else {
-				return this.inherited(arguments);
+				return this.inherited(_getRenderedCollection, arguments);
 			}
 		}
 	});

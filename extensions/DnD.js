@@ -14,7 +14,7 @@ define([
 	'../Selection',
 	'dojo/has!touch?../util/touch'
 ], function (declare, lang, arrayUtil, aspect, domClass, topic, touch, has, when, DnDSource,
-		DnDManager, NodeList, Selection, touchUtil) {
+	DnDManager, NodeList, Selection, touchUtil) {
 	// Requirements
 	// * requires a store (sounds obvious, but not all Lists/Grids have stores...)
 	// * must support options.before in put calls
@@ -39,10 +39,10 @@ define([
 				return grid.collection.get(node.id.slice(grid.id.length + 5));
 			});
 		},
-		_legalMouseDown: function (evt) {
+		_legalMouseDown: function _legalMouseDown(evt) {
 			// Fix _legalMouseDown to only allow starting drag from an item
 			// (not from bodyNode outside contentNode).
-			var legal = this.inherited(arguments);
+			var legal = this.inherited(_legalMouseDown, arguments);
 			return legal && evt.target !== this.grid.bodyNode;
 		},
 
@@ -93,7 +93,7 @@ define([
 			// dropping last node into empty space beyond rendered rows.)
 			nodeRow = grid.row(nodes[0]);
 			if (!copy && (targetRow === nodes[0] ||
-					(!targetItem && nodeRow && grid.down(nodeRow).element === nodes[0]))) {
+				(!targetItem && nodeRow && grid.down(nodeRow).element === nodes[0]))) {
 				return;
 			}
 
@@ -182,10 +182,10 @@ define([
 			});
 		},
 
-		onDndStart: function (source) {
+		onDndStart: function onDndStart(source) {
 			// Listen for start events to apply style change to avatar.
 
-			this.inherited(arguments); // DnDSource.prototype.onDndStart.apply(this, arguments);
+			this.inherited(onDndStart, arguments); // DnDSource.prototype.onDndStart.apply(this, arguments);
 			if (source === this) {
 				// Set avatar width to half the grid's width.
 				// Kind of a naive default, but prevents ridiculously wide avatars.
@@ -194,23 +194,23 @@ define([
 			}
 		},
 
-		onMouseDown: function (evt) {
+		onMouseDown: function onMouseDown(evt) {
 			// Cancel the drag operation on presence of more than one contact point.
 			// (This check will evaluate to false under non-touch circumstances.)
 			if (has('touch') && this.isDragging &&
-					touchUtil.countCurrentTouches(evt, this.grid.touchNode) > 1) {
+				touchUtil.countCurrentTouches(evt, this.grid.touchNode) > 1) {
 				topic.publish('/dnd/cancel');
 				DnDManager.manager().stopDrag();
 			}
 			else {
-				this.inherited(arguments);
+				this.inherited(onMouseDown, arguments);
 			}
 		},
 
-		onMouseMove: function (evt) {
+		onMouseMove: function onMouseMove(evt) {
 			// If we're handling touchmove, only respond to single-contact events.
 			if (!has('touch') || touchUtil.countCurrentTouches(evt, this.grid.touchNode) <= 1) {
-				this.inherited(arguments);
+				this.inherited(onMouseMove, arguments);
 			}
 		},
 
@@ -219,12 +219,12 @@ define([
 			return source.getObject &&
 				DnDSource.prototype.checkAcceptance.apply(this, arguments);
 		},
-		getSelectedNodes: function () {
+		getSelectedNodes: function getSelectedNodes() {
 			// If dgrid's Selection mixin is in use, synchronize with it, using a
 			// map of node references (updated on dgrid-[de]select events).
 
 			if (!this.grid.selection) {
-				return this.inherited(arguments);
+				return this.inherited(getSelectedNodes, arguments);
 			}
 			var t = new NodeList(),
 				id;
@@ -256,8 +256,8 @@ define([
 		//		Defaults to the GridSource constructor defined/exposed by this module.
 		dndConstructor: GridDnDSource,
 
-		postMixInProperties: function () {
-			this.inherited(arguments);
+		postMixInProperties: function postMixInProperties() {
+			this.inherited(postMixInProperties, arguments);
 			// ensure dndParams is initialized
 			this.dndParams = lang.mixin({ accept: [this.dndSourceType] }, this.dndParams);
 
@@ -271,8 +271,8 @@ define([
 			this.mouseDownEventType = touch.press;
 		},
 
-		postCreate: function () {
-			this.inherited(arguments);
+		postCreate: function postCreate() {
+			this.inherited(postCreate, arguments);
 
 			// Make the grid's content a DnD source/target.
 			var Source = this.dndConstructor || GridDnDSource;
@@ -319,9 +319,9 @@ define([
 			);
 		},
 
-		insertRow: function (object) {
+		insertRow: function insertRow(object) {
 			// override to add dojoDndItem class to make the rows draggable
-			var row = this.inherited(arguments),
+			var row = this.inherited(insertRow, arguments),
 				type = typeof this.getObjectDndType === 'function' ?
 					this.getObjectDndType(object) : [this.dndSourceType];
 
@@ -341,7 +341,7 @@ define([
 			return row;
 		},
 
-		removeRow: function (rowElement) {
+		removeRow: function removeRow(rowElement) {
 			var row = this.row(rowElement);
 
 			if (this.selection && (row.id in this.selection)) {
@@ -349,7 +349,7 @@ define([
 			}
 
 			this.dndSource.delItem(row.element.id);
-			this.inherited(arguments);
+			this.inherited(removeRow, arguments);
 		}
 	});
 	DnD.GridSource = GridDnDSource;

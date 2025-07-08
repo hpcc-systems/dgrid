@@ -21,7 +21,7 @@ define([
 		//		In addition, the deepest child columns may be rendered without
 		//		individual headers by specifying `showChildHeaders: false` on the parent.
 
-		configStructure: function () {
+		configStructure: function configStructure() {
 			// create a set of sub rows for the header row so we can do compound columns
 			// the first row is a special spacer row
 			var columns = (this.subRows && this.subRows[0]) || this.columns,
@@ -35,7 +35,7 @@ define([
 
 			function processColumns(columns, level, hasLabel, parent) {
 				var numColumns = 0,
-					noop = function () {},
+					noop = function () { },
 					children,
 					hasChildLabels;
 
@@ -43,7 +43,7 @@ define([
 					// Handle the column config when it is an object rather
 					// than an array.
 					if (typeof column === 'string') {
-						column = {label: column};
+						column = { label: column };
 					}
 					if (!(columns instanceof Array) && !column.field) {
 						column.field = i;
@@ -69,14 +69,14 @@ define([
 						// it has no children, it is a normal header, add it to the content columns
 						contentColumns.push(column);
 						// add each one to the first spacer header row for proper layout of the header cells
-						topHeaderRow.push(lang.delegate(column, {renderHeaderCell: noop}));
+						topHeaderRow.push(lang.delegate(column, { renderHeaderCell: noop }));
 						numColumns++;
 					}
 					if (!hasChildLabels) {
 						// create a header version of the column where we can define a specific rowSpan
 						// we define the rowSpan as a negative, the number of levels less than the
 						// total number of rows, which we don't know yet
-						column = lang.delegate(column, {rowSpan: -level});
+						column = lang.delegate(column, { rowSpan: -level });
 					}
 
 					if (children) {
@@ -118,15 +118,15 @@ define([
 			// configuration for rendering the headers
 			contentColumns.headerRows = headerRows;
 			this.subRows = contentColumns;
-			this.inherited(arguments);
+			this.inherited(configStructure, arguments);
 		},
 
-		renderHeader: function () {
+		renderHeader: function renderHeader() {
 			var i,
 				columns = this.subRows[0],
 				headerColumns = this.subRows.headerRows[0];
 
-			this.inherited(arguments);
+			this.inherited(renderHeader, arguments);
 
 			// The object delegation performed in configStructure unfortunately
 			// "protects" the original column definition objects (referenced by
@@ -137,8 +137,8 @@ define([
 			}
 		},
 
-		_findSortArrowParent: function () {
-			var parent = this.inherited(arguments),
+		_findSortArrowParent: function _findSortArrowParent() {
+			var parent = this.inherited(_findSortArrowParent, arguments),
 				spacerRow = query('.dgrid-spacer-row', this.headerNode)[0],
 				columnId,
 				nodes;
@@ -150,7 +150,7 @@ define([
 			}
 		},
 
-		_configColumn: function (column, rowColumns, prefix) {
+		_configColumn: function _configColumn(column, rowColumns, prefix) {
 			// Updates the id on a column definition that is a child to include
 			// the parent's id.
 			var parent = column.parentColumn;
@@ -162,10 +162,10 @@ define([
 				prefix = parent.id + '-';
 				columnId = column.id = prefix + id;
 			}
-			this.inherited(arguments, [column, rowColumns, prefix]);
+			this.inherited(_configColumn, arguments, [column, rowColumns, prefix]);
 		},
 
-		cell: function (target, columnId) {
+		cell: function cell(target, columnId) {
 			// summary:
 			//		Get the cell object by node, event, or id, plus a columnId.
 			//		This extension prefixes children's column ids with the parents' column ids,
@@ -179,14 +179,14 @@ define([
 					columnId = column.id;
 				}
 			}
-			return this.inherited(arguments, [target, columnId]);
+			return this.inherited(cell, arguments, [target, columnId]);
 		},
 
-		column: function (target) {
+		column: function column(target) {
 			// summary:
 			//		Get the column object by node, event, or column id.  Take into account parent column id
 			//		prefixes that may be added by this extension.
-			var results = this.inherited(arguments);
+			var results = this.inherited(column, arguments);
 			if (results == null && typeof target !== 'object') {
 				// Find a column id that ends with the provided column id.  This will locate a child column
 				// by an id that was provided in the original column configuration.  For example, if a compound column
@@ -235,11 +235,11 @@ define([
 			}
 		},
 
-		_hideColumn: function (id) {
+		_hideColumn: function _hideColumn(id) {
 			var self = this;
 
 			this._updateCompoundHiddenStates(id, true);
-			this.inherited(arguments);
+			this.inherited(_hideColumn, arguments);
 
 			if (has('ff')) {
 				// Firefox causes display quirks in certain situations;
@@ -252,9 +252,9 @@ define([
 			}
 		},
 
-		_showColumn: function (id) {
+		_showColumn: function _showColumn(id) {
 			this._updateCompoundHiddenStates(id, false);
-			this.inherited(arguments);
+			this.inherited(_showColumn, arguments);
 		},
 
 		_getResizedColumnWidths: function () {

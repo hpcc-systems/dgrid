@@ -23,8 +23,8 @@ define([
 		//		* object - the row's data object
 		//		The custom renderSelectorInput function must return an input field.
 
-		postCreate: function () {
-			this.inherited(arguments);
+		postCreate: function postCreate() {
+			this.inherited(postCreate, arguments);
 
 			// Register one listener at the top level that receives events delegated
 			var handleSelectorClick = lang.hitch(this, '_handleSelectorClick');
@@ -118,7 +118,7 @@ define([
 							if (row) {
 								if (event.shiftKey) {
 									// Make sure the last input always ends up checked for shift key
-									this._changeSelectorInput(true, {rows: [row]});
+									this._changeSelectorInput(true, { rows: [row] });
 								}
 								else {
 									// No shift key, so no range selection
@@ -206,8 +206,8 @@ define([
 			}
 		},
 
-		configStructure: function () {
-			this.inherited(arguments);
+		configStructure: function configStructure() {
+			this.inherited(configStructure, arguments);
 			var columns = this.columns;
 			this._selectorColumns = [];
 			this._hasSelectorHeaderCheckbox = this._selectorSingleRow = false;
@@ -219,11 +219,11 @@ define([
 			}
 		},
 
-		_handleSelect: function (event) {
+		_handleSelect: function _handleSelect(event) {
 			// Ignore the default select handler for events that originate from the selector column
 			var column = this.cell(event).column;
 			if (!column || !column.selector) {
-				this.inherited(arguments);
+				this.inherited(_handleSelect, arguments);
 			}
 		}
 	});

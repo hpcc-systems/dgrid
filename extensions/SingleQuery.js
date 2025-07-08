@@ -11,12 +11,12 @@ define([
 		//		Appropriate for grids using memory stores with small
 		//		result set sizes.
 
-		refresh: function () {
+		refresh: function refresh() {
 			var self = this;
 
 			// First defer to List#refresh to clear the grid's
 			// previous content
-			this.inherited(arguments);
+			this.inherited(refresh, arguments);
 
 			if (!this._renderedCollection) {
 				return;
@@ -51,8 +51,8 @@ define([
 			});
 		},
 
-		renderArray: function () {
-			var rows = this.inherited(arguments);
+		renderArray: function renderArray() {
+			var rows = this.inherited(renderArray, arguments);
 
 			// Clear _lastCollection which is ordinarily only used for store-less grids
 			this._lastCollection = null;

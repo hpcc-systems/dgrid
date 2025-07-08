@@ -128,7 +128,7 @@ define([
 							columnIds.push(id);
 						}
 						if (id === idFrom && (idFrom = columnIds) ||
-								id === idTo && (idTo = columnIds)) {
+							id === idTo && (idTo = columnIds)) {
 							// Once found, mark it off so we don't hit it again
 							columnIds.push(id);
 							if (started || (idFrom == columnIds && id == idTo)) {
@@ -157,10 +157,10 @@ define([
 			}
 		},
 
-		_determineSelectionDirection: function () {
+		_determineSelectionDirection: function _determineSelectionDirection() {
 			// Extend Selection to return next/previousSibling instead of down/up,
 			// given how CellSelection#_select is written
-			var result = this.inherited(arguments);
+			var result = this.inherited(_determineSelectionDirection, arguments);
 			if (result === 'down') {
 				return 'nextSibling';
 			}
@@ -192,10 +192,10 @@ define([
 				return this.allSelected && (!object.row.data || this.allowSelect(object));
 			}
 		},
-		clearSelection: function (exceptId) {
+		clearSelection: function clearSelection(exceptId) {
 			// disable exceptId in cell selection, since it would require double parameters
 			exceptId = false;
-			this.inherited(arguments);
+			this.inherited(clearSelection, arguments);
 		}
 	});
 });

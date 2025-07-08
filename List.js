@@ -271,7 +271,7 @@ define([
 				}
 				// re-fire, since browsers are not consistent about propagation here
 				event.stopPropagation();
-				listen.emit(domNode, 'scroll', {scrollTarget: bodyNode});
+				listen.emit(domNode, 'scroll', { scrollTarget: bodyNode });
 			});
 			this.configStructure();
 			this.renderHeader();
@@ -297,7 +297,7 @@ define([
 		postCreate: function () {
 		},
 
-		startup: function () {
+		startup: function startup() {
 			// summary:
 			//		Called automatically after postCreate if the component is already
 			//		visible; otherwise, should be called manually once placed.
@@ -305,7 +305,7 @@ define([
 			if (this._started) {
 				return;
 			}
-			this.inherited(arguments);
+			this.inherited(startup, arguments);
 			this._started = true;
 			this.resize();
 			// apply sort (and refresh) now that we're ready to render
@@ -476,7 +476,7 @@ define([
 			// Insert the document fragment into the appropriate position
 			container = beforeNode ? beforeNode.parentNode : self.contentNode;
 			if (container && container.parentNode &&
-					(container !== self.contentNode || len)) {
+				(container !== self.contentNode || len)) {
 				container.insertBefore(rowsFragment, beforeNode || null);
 				if (len) {
 					self.adjustRowIndices(rows[len - 1]);
@@ -489,7 +489,7 @@ define([
 		renderHeader: function () {
 			// no-op in a plain list
 		},
-		setRowIndex: function(row, rowIndex, oldRowIndex) {
+		setRowIndex: function (row, rowIndex, oldRowIndex) {
 			// Update row for changes to the visual row index.
 			row.rowIndex = rowIndex;
 			if (this.maintainOddEven) {
@@ -513,7 +513,7 @@ define([
 			// (This is used by tree to allow the same object to appear under
 			// multiple parents.)
 			var id = this.id + '-row-' + ((this.collection && this.collection.getIdentity) ?
-					this.collection.getIdentity(object) : this._autoRowId++),
+				this.collection.getIdentity(object) : this._autoRowId++),
 				row = byId(id, this.domNode),
 				previousRow = row && row.previousSibling;
 
@@ -594,7 +594,7 @@ define([
 						return new this._Row(rowId.substring(this.id.length + 5), object, target);
 					}
 					target = target.parentNode;
-				}while (target && target !== this.domNode);
+				} while (target && target !== this.domNode);
 				return;
 			}
 
@@ -646,7 +646,7 @@ define([
 						break;
 					}
 				}
-			}while (steps);
+			} while (steps);
 			// Return the final element we arrived at, which might still be the
 			// starting element if we couldn't navigate further in that direction.
 			return element;
@@ -798,7 +798,7 @@ define([
 			//		specifies whether to sort ascending (false) or descending (true)
 
 			this.sort = typeof property !== 'string' ? property :
-				[{property: property, descending: descending}];
+				[{ property: property, descending: descending }];
 
 			this._applySort();
 		},

@@ -93,8 +93,8 @@ define([
 		// 		List of DOM nodes queued for deletion.
 		_deleteQueue: [],
 
-		postCreate: function () {
-			this.inherited(arguments);
+		postCreate: function postCreate() {
+			this.inherited(postCreate, arguments);
 			var self = this;
 			// check visibility on scroll events
 			on(this.bodyNode, 'scroll',
@@ -168,8 +168,8 @@ define([
 			self._insertPreload(topPreload);
 
 			var loadingNode = domConstruct.create('div', {
-					className: 'dgrid-loading'
-				}, preloadNode, 'before'),
+				className: 'dgrid-loading'
+			}, preloadNode, 'before'),
 				innerNode = domConstruct.create('div', {
 					className: 'dgrid-below'
 				}, loadingNode);
@@ -269,7 +269,7 @@ define([
 			preload.previous = newBottomPreload;
 		},
 
-		refresh: function (options) {
+		refresh: function refresh(options) {
 			// summary:
 			//		Refreshes the contents of the grid.
 			// options: Object?
@@ -292,7 +292,7 @@ define([
 				this._previousScrollPosition = this.getScrollPosition();
 			}
 
-			this.inherited(arguments);
+			this.inherited(refresh, arguments);
 			if (this._renderedCollection) {
 				// render the query
 				// renderQuery calls _trackError internally
@@ -318,18 +318,18 @@ define([
 			}
 		},
 
-		resize: function () {
-			this.inherited(arguments);
+		resize: function resize() {
+			this.inherited(resize, arguments);
 			this._processScroll();
 		},
 
-		cleanup: function () {
-			this.inherited(arguments);
+		cleanup: function cleanup() {
+			this.inherited(cleanup, arguments);
 			this.preload = null;
 		},
 
-		renderQueryResults: function (results) {
-			var rows = this.inherited(arguments);
+		renderQueryResults: function renderQueryResults(results) {
+			var rows = this.inherited(renderQueryResults, arguments);
 			var collection = this._getRenderedCollection(this.preload);
 
 			if (collection && collection.releaseRange) {
@@ -404,7 +404,7 @@ define([
 			}
 			while (preload) {
 				if (!preload.rowHeight) {
-					preload.rowHeight = 
+					preload.rowHeight =
 						this._calcAverageRowHeight(preload.node.parentNode.querySelectorAll('.dgrid-row'));
 					this._adjustPreloadHeight(preload);
 				}
@@ -620,7 +620,7 @@ define([
 				else {
 					// the preload node is visible, or close to visible, better show it
 					var offset = ((preloadNode.top ? visibleTop - requestBuffer :
-							visibleBottom) - preloadTop) / preload.rowHeight;
+						visibleBottom) - preloadTop) / preload.rowHeight;
 					var count = (visibleBottom - visibleTop + 2 * requestBuffer) / preload.rowHeight;
 					// utilize momentum for predictions
 					var momentum = Math.max(

@@ -184,8 +184,8 @@ define([
 
 		_resizedColumns: false, // flag indicating if resizer has converted column widths to px
 
-		buildRendering: function () {
-			this.inherited(arguments);
+		buildRendering: function buildRendering() {
+			this.inherited(buildRendering, arguments);
 
 			// Create resizerNode when first grid w/ ColumnResizer is created
 			if (!resizableCount) {
@@ -194,8 +194,8 @@ define([
 			resizableCount++;
 		},
 
-		destroy: function () {
-			this.inherited(arguments);
+		destroy: function destroy() {
+			this.inherited(destroy, arguments);
 
 			// Remove any applied column size styles since we're tracking them directly
 			for (var name in this._columnSizes) {
@@ -219,14 +219,14 @@ define([
 			return resizeColumnWidth(this, colId, width);
 		},
 
-		configStructure: function () {
+		configStructure: function configStructure() {
 			var oldSizes = this._oldColumnSizes = lang.mixin({}, this._columnSizes), // shallow clone
 				k;
 
 			this._resizedColumns = false;
 			this._columnSizes = {};
 
-			this.inherited(arguments);
+			this.inherited(configStructure, arguments);
 
 			// Remove old column styles that are no longer relevant; this is specifically
 			// done *after* calling inherited so that _columnSizes will contain keys
@@ -239,8 +239,8 @@ define([
 			delete this._oldColumnSizes;
 		},
 
-		_configColumn: function (column) {
-			this.inherited(arguments);
+		_configColumn: function _configColumn(column) {
+			this.inherited(_configColumn, arguments);
 
 			var colId = column.id,
 				rule;
@@ -259,8 +259,8 @@ define([
 			}
 		},
 
-		renderHeader: function () {
-			this.inherited(arguments);
+		renderHeader: function renderHeader() {
+			this.inherited(renderHeader, arguments);
 
 			var grid = this;
 
@@ -307,7 +307,7 @@ define([
 				// establish listeners for initiating, dragging, and finishing resize
 				listen(grid.headerNode,
 					'.dgrid-resize-handle:mousedown' +
-						(has('touch') ? ',.dgrid-resize-handle:touchstart' : ''),
+					(has('touch') ? ',.dgrid-resize-handle:touchstart' : ''),
 					function (e) {
 						grid._resizeMouseDown(e, this);
 						grid.mouseMoveListen.resume();
@@ -320,7 +320,7 @@ define([
 						miscUtil.throttleDelayed(function (e) {
 							grid._updateResizerPosition(e);
 						})
-				));
+					));
 				grid._listeners.push(grid.mouseUpListen = listen.pausable(document,
 					'mouseup' + (has('touch') ? ',touchend' : ''),
 					function (e) {
@@ -488,7 +488,7 @@ define([
 			while (i--) {
 				totalWidth += colNodes[i].offsetWidth;
 			}
-			return {totalWidth: totalWidth, lastColId: lastColId};
+			return { totalWidth: totalWidth, lastColId: lastColId };
 		}
 	});
 });

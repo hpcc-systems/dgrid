@@ -191,9 +191,9 @@ define([
 			}
 		},
 
-		postCreate: function () {
+		postCreate: function postCreate() {
 			var self = this;
-			this.inherited(arguments);
+			this.inherited(postCreate, arguments);
 
 			this.on(horizMouseWheel(this), horizMoveHandler);
 			if (has('touch')) {
@@ -223,7 +223,7 @@ define([
 
 		columnSets: [],
 
-		createRowCells: function (tag, each, subRows, object, options) {
+		createRowCells: function createRowCells(tag, each, subRows, object, options) {
 			var row = domConstruct.create('table', { className: 'dgrid-row-table' });
 			var tbody = domConstruct.create('tbody', null, row);
 			var tr = domConstruct.create('tr', null, tbody);
@@ -237,13 +237,13 @@ define([
 				}, cell);
 				cell.setAttribute(colsetidAttr, i);
 				var subset = getColumnSetSubRows(subRows || this.subRows, i) || this.columnSets[i];
-				cell.appendChild(this.inherited(arguments, [tag, each, subset, object, options]));
+				cell.appendChild(this.inherited(createRowCells, arguments, [tag, each, subset, object, options]));
 			}
 			return row;
 		},
 
-		renderArray: function () {
-			var rows = this.inherited(arguments);
+		renderArray: function renderArray() {
+			var rows = this.inherited(renderArray, arguments);
 
 			for (var i = 0; i < rows.length; i++) {
 				adjustScrollLeft(this, rows[i]);
@@ -251,16 +251,16 @@ define([
 			return rows;
 		},
 
-		insertRow: function () {
-			var row = this.inherited(arguments);
+		insertRow: function insertRow() {
+			var row = this.inherited(insertRow, arguments);
 			adjustScrollLeft(this, row);
 			return row;
 		},
 
-		renderHeader: function () {
+		renderHeader: function renderHeader() {
 			// summary:
 			//		Setup the headers for the grid
-			this.inherited(arguments);
+			this.inherited(renderHeader, arguments);
 
 			var columnSets = this.columnSets,
 				scrollers = this._columnSetScrollers,
@@ -310,7 +310,7 @@ define([
 			return rule;
 		},
 
-		configStructure: function () {
+		configStructure: function configStructure() {
 			// Squash the column sets together so the grid and other dgrid extensions and mixins can
 			// configure the columns and create any needed subrows.
 			this.columns = {};
@@ -321,7 +321,7 @@ define([
 					columnSet[j] = this._configColumns(i + '-' + j + '-', columnSet[j]);
 				}
 			}
-			this.inherited(arguments);
+			this.inherited(configStructure, arguments);
 		},
 
 		_positionScrollers: function () {
@@ -383,19 +383,19 @@ define([
 
 			if (this._columnSetScrollLefts[colSetId] !== scrollLeft) {
 				query('.dgrid-column-set[' + colsetidAttr + '="' + colSetId +
-						'"],.dgrid-column-set-scroller[' + colsetidAttr + '="' + colSetId + '"]', this.domNode
-					).forEach(function (element, i) {
-						element.scrollLeft = scrollLeft;
-						if (!i) {
-							// Compute newScrollLeft based on actual resulting
-							// value of scrollLeft, which may be different than
-							// what we assigned under certain circumstances
-							// (e.g. Chrome under 33% / 67% / 90% zoom).
-							// Only need to compute this once, as it will be the
-							// same for every row.
-							newScrollLeft = element.scrollLeft;
-						}
-					});
+					'"],.dgrid-column-set-scroller[' + colsetidAttr + '="' + colSetId + '"]', this.domNode
+				).forEach(function (element, i) {
+					element.scrollLeft = scrollLeft;
+					if (!i) {
+						// Compute newScrollLeft based on actual resulting
+						// value of scrollLeft, which may be different than
+						// what we assigned under certain circumstances
+						// (e.g. Chrome under 33% / 67% / 90% zoom).
+						// Only need to compute this once, as it will be the
+						// same for every row.
+						newScrollLeft = element.scrollLeft;
+					}
+				});
 				this._columnSetScrollLefts[colSetId] = newScrollLeft;
 			}
 		},
